@@ -877,6 +877,7 @@ class GraphormerForGraphClassification(GraphormerPreTrainedModel):
         head_outputs = self.classifier(outputs)
         logits = head_outputs[:, 0, :].contiguous()
 
+        loss = None
         if labels is not None:
             mask = ~torch.isnan(labels)
 
