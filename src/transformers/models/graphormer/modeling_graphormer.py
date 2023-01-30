@@ -667,7 +667,7 @@ class GraphormerGraphEncoder(nn.Module):
         graph_rep = input_nodes[0, :, :]
 
         if last_state_only:
-            inner_states = [input_nodes]
+            inner_states = (input_nodes,)
 
         if self.traceable:
             return torch.stack(inner_states), graph_rep
