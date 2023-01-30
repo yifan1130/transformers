@@ -800,6 +800,7 @@ class GraphormerModel(GraphormerPreTrainedModel):
         attn_edge_type,
         perturb=None,
         masked_tokens=None,
+        output_hidden_states=False,
         return_dict: Optional[bool] = True,
         **unused
     ):
@@ -819,6 +820,9 @@ class GraphormerModel(GraphormerPreTrainedModel):
         # project back to size of vocabulary
         if self.share_input_output_embed and hasattr(self.graph_encoder.embed_tokens, "weight"):
             input_nodes = torch.nn.functional.linear(input_nodes, self.graph_encoder.embed_tokens.weight)
+
+        if not output_hidden_states:
+            inner_states = None
 
         if not return_dict:
             return (input_nodes, inner_states)
