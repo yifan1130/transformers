@@ -800,7 +800,7 @@ class GraphormerModel(GraphormerPreTrainedModel):
         attn_edge_type,
         perturb=None,
         masked_tokens=None,
-        output_hidden_states=False,
+        output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = True,
         **unused
     ):
@@ -865,8 +865,9 @@ class GraphormerForGraphClassification(GraphormerPreTrainedModel):
         out_degree,
         spatial_pos,
         attn_edge_type,
-        labels: Optional[torch.LongTensor] = None,
+        output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = True,
+
         **unused,
     ) -> Union[Tuple[torch.Tensor], SequenceClassifierOutput]:
         encoder_outputs = self.encoder(
@@ -878,7 +879,11 @@ class GraphormerForGraphClassification(GraphormerPreTrainedModel):
             spatial_pos,
             attn_edge_type,
         )
-        outputs, hidden_states = encoder_outputs["last_hidden_state"], encoder_outputs["hidden_states"]
+        outputs = encoder_outputs["last_hidden_state"]
+
+        hidden_states = None
+        if output_hidden_states:
+            hidden_states = encoder_outputs["hidden_states"]
 
         head_outputs = self.classifier(outputs)
         logits = head_outputs[:, 0, :].contiguous()
