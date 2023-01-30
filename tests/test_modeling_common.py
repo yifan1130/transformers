@@ -746,6 +746,19 @@ class ModelTesterMixin:
                     traced_model = torch.jit.trace(
                         model, (input_ids, bbox, image), check_trace=False
                     )  # when traced model is checked, an error is produced due to name mangling
+                elif config.__class__.__name == "GraphormerConfig":  # Graphormer requires additional inputs
+                    required_keys = (
+                        "input_nodes",
+                        "input_edges",
+                        "attn_bias",
+                        "in_degree",
+                        "out_degree",
+                        "spatial_pos",
+                        "attn_edge_type",
+                    )
+                    required_inputs = tuple(inputs[k] for k in required_keys)
+                    model(*required_inputs)
+                    traced_model = torch.jit.trace(model, required_inputs)
                 else:
                     main_input = inputs[main_input_name]
                     model(main_input)
