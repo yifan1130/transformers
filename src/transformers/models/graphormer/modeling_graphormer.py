@@ -664,6 +664,8 @@ class GraphormerGraphEncoder(nn.Module):
             if not last_state_only:
                 inner_states.append(input_nodes)
 
+        # use tuple instead of list to avid some problems in torchscript tracing and potentially other places
+        inner_states = tuple(inner_states)
         graph_rep = input_nodes[0, :, :]
 
         if last_state_only:
