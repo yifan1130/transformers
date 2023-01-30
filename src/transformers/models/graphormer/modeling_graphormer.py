@@ -865,6 +865,7 @@ class GraphormerForGraphClassification(GraphormerPreTrainedModel):
         out_degree,
         spatial_pos,
         attn_edge_type,
+        labels: Optional[torch.LongTensor] = None,
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = True,
 
